@@ -1,0 +1,7 @@
+# crontab commands that are installed when the docker image is started
+# DEV cronjobs
+
+CRON_ENV=/usr/local/bin/iwfcronenv.sh
+
+# m h dom mon dow   command
+#0 * * * * $CRON_ENV /usr/local/bin/php /app/bin/console cache:clear --env=prod >> /app/var/logs/cron.log

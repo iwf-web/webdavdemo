@@ -1,0 +1,7 @@
+parameters:
+    testfiles_folder: "%kernel.project_dir%/tests/Base/Fixtures/files"
+services:
+    App\Tests\Base\Fixtures\:
+      resource: '../tests/Base/Fixtures/*'
+      autowire: true
+      autoconfigure: true

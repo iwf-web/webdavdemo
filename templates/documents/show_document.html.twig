@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Document detail{% endblock %}
+
+{% block body %}
+    <h1>Details "{{ document.name }}.{{ document.fileExtension }}" (ID: {{ document.id }})</h1>
+    <p><a href="{{ path('app_documents_list_documents') }}">back to list</a></p>
+
+    <h2>Document versions</h2>
+    <p><a href="{{ path('app_documents_new_document_version', {id: document.id}) }}">upload new version</a></p>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Version</th>
+            <th>Size</th>
+            <th>Serverpath</th>
+            <th>Created at</th>
+        </tr>
+        </thead>
+        {% for file in document.getOrderedFileVersions %}
+            <tr>
+                <td>{{ file.id }}</td>
+                <td><a title="download"
+                       href="{{ path('app_documents_download_document_file', {id:document.id, versionNr:file.versionNr }) }}"
+                       target="_blank">{{ file.versionNr }}</a></td>
+                <td>{{ file.size }}</td>
+                <td>{{ file.fullpath }}</td>
+                <td>{{ file.createdAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

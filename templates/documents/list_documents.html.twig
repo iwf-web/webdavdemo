@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Document List{% endblock %}
+
+{% block body %}
+    <h1>Documentlist</h1>
+    <p><a href="{{ path('app_documents_new_document') }}">create new document</a></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Filename</th>
+                <th>VersionNr</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        {% for document in documents %}
+            <tr>
+                <td><a href="{{ path('app_documents_show_document', {id:document.id }) }}">{{ document.id }}</a></td>
+                <td>{{ document.name }}.{{ document.fileExtension }}</td>
+                <td><a title="download"
+                       href="{{ path('app_documents_download_document_file', {id:document.id, versionNr:document.currentFile.versionNr }) }}"
+                       target="_blank">{{ document.currentFile.versionNr }}</a></td>
+                <td>
+                    <a onclick="alert('Here we need your implementation to edit this document({{ document.id }}) and create an new version on saving')"
+                       href="#">edit</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

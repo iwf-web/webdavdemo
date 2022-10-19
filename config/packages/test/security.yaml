@@ -1,0 +1,15 @@
+security:
+  password_hashers:
+    App\Entity\User\User:
+      algorithm: plaintext
+
+  firewalls:
+    # disables authentication for assets and the profiler, adapt it according to your needs
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js|favicon.ico)/
+      security: false
+
+    main:
+      http_basic: ~
+      pattern: ^/
+      stateless: true

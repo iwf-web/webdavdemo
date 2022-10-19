@@ -1,0 +1,12 @@
+# use the latest nginx image here, see https://confluence.iwf.io/x/T5k-/
+FROM iwfwebsolutions/nginx:1.20-latest
+
+# optional: copy additional assets
+# COPY ./assets-web/ /
+
+ENV APP_FRAMEWORK=symfony4
+
+# needed: copy all static site data from the base image into /app/public (the document root)
+COPY --from={{BASE_IMAGE}} /app/public /app/web
+# copy generated files like version.txt to nginx
+COPY --from={{BASE_IMAGE}} /app/web/version.txt /app/web/version.txt

@@ -1,0 +1,107 @@
+version: '2'
+
+services:
+
+  ##### TIER 1 #####
+  nginx:
+    image: iwfwebsolutions/nginx:1.20-latest
+    container_name: nginx
+    environment:
+      - RUNTIME_ENVIRONMENT=local
+      - APP_FRAMEWORK=symfony4
+    volumes:
+      # here you should mount all directories you copy into the web image in build/Dockerfile.web
+      # including all directories where symlinks point to, e.g. vendor for symfony projects
+      - ../../public:/app/web
+      - ../../vendor:/app/vendor
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - fpm
+    networks:
+      - appnetwork
+
+  ##### TIER 2 #####
+  fpm:
+    image: local/app:latest
+    container_name: fpm
+    domainname: local
+    volumes:
+      # the app directory is completely overshadowed by the local devs project files
+      - ../../:/app
+
+      # here you place your local symfony config (parameters_local.yml) -- this is symlinked to the parameters.yml through the script _copy_symfony_params.sh
+      - ./data/conf/symfony_configs:/data/conf/symfony_configs
+
+      # in this directory you can add a "crontab.local" file used for local installations
+      - ./data/conf/crontabs:/data/conf/crontabs
+
+      # Uncomment this one if you want to specify different startup scripts for local development -- you should copy some scripts
+      # from build/assets-fpm/data/dockerinit.d then, e.g. the 00_copy_symfony_params.sh
+      # - ./data/dockerinit.d/php-fpm:/data/dockerinit.d
+      - ./data/dockerinit.d/php-fpm/00a_composer-install.sh:/data/dockerinit.d/00a_composer-install.sh
+      - ./data/dockerinit.d/php-fpm/99_yarn-install.sh:/data/dockerinit.d/99_yarn-install.sh
+
+      # move cache and logs out of the way for better NFS performance
+      - ~/appdata/app/var/cache:/app/var/cache
+      - ~/appdata/app/var/logs:/app/var/logs
+      - ~/appdata/app/var/sessions:/app/var/sessions
+      # map the .gitkeep files because git can't see these files inside the container
+      - ../../var/cache/.gitkeep:/app/var/cache/.gitkeep
+      - ../../var/logs/.gitkeep:/app/var/logs/.gitkeep
+      - ../../var/sessions/.gitkeep:/app/var/sessions/.gitkeep
+
+      # keep upload data
+      - ~/appdata/app/data:/app/data
+      - ~/appdata/app/public/media:/app/public/media
+
+      # mount the .ssh folder of the vagrant machine to the fpm container to allow GIT access from within
+      - /home/vagrant/.ssh:/var/www/.ssh
+
+      # this one is needed for running tests from inside PhpStorm with Remote interpreters and does only apply
+      # for a Vagrant environment
+      - /home/vagrant:/home/vagrant
+    environment:
+      - RUNTIME_ENVIRONMENT=local # dev is default
+      - PHP_IDE_CONFIG=serverName=reactbp # for PHPStorm debugging
+      - DATABASE_PASSWORD=spQExpG5oR7nAwrM7VwMMdmH6FCn
+      - FLAGS_PATH=/tmp # for dockerinit.d initial script "done" flag
+      - COMPOSER_MEMORY_LIMIT=-1
+    links:
+      - db
+      - mailcatcher
+    networks:
+      - appnetwork
+
+  ##### TIER 3 #####
+  db:
+    image: iwfwebsolutions/mysql:8.0-latest
+    container_name: db
+    volumes:
+      - ./data/dockerinit.d/mysql:/docker-entrypoint-initdb.d
+      - ~/appdata/var/lib/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=B84tjSAW9qhd2NaZMT7Q8g5CPvuc
+      - MYSQL_PASSWORD=spQExpG5oR7nAwrM7VwMMdmH6FCn
+    networks:
+      - appnetwork
+
+  ##### myphpadmin #####
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    domainname: local
+    ports:
+      - 8081:80
+    links:
+      - db
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=uDb
+      - PMA_PASSWORD=spQExpG5oR7nAwrM7VwMMdmH6FCn
+    networks:
+      - appnetwork
+
+networks:
+  appnetwork:

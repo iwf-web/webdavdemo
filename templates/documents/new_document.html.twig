@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Document{% endblock %}
+
+{% block body %}
+    <h1>Create new Document</h1>
+
+    {{ form_start(form, {attr: attr|default({})}) }}
+    {{ form_widget(form) }}
+
+    <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
+        <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('create new document') }}
+    </button>
+
+    <a href="{{ path('app_documents_list_documents') }}" class="btn btn-link">back to document list</a>
+    {{ form_end(form) }}
+{% endblock %}

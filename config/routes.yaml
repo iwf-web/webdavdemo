@@ -1,0 +1,8 @@
+app:
+  resource: "../src/Controller/"
+  type:     annotation
+
+app_logout:
+  path: /api/logout
+  options:
+    expose: true

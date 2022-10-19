@@ -1,0 +1,54 @@
+monolog:
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: warning
+            handler: main_log
+            channels: ['!event', "!php", "!deprecation"]
+        main_log:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+
+        console:
+            type: console
+            process_psr_3_messages: false
+            verbosity_levels:
+                VERBOSITY_VERBOSE: INFO
+                VERBOSITY_VERY_VERBOSE: DEBUG
+            channels: ['!event', '!doctrine', '!console', "!deprecation"]
+
+        console_very_verbose:
+            type:   console
+            bubble: false
+            verbosity_levels:
+                VERBOSITY_VERBOSE: NOTICE
+                VERBOSITY_VERY_VERBOSE: NOTICE
+                VERBOSITY_DEBUG: DEBUG
+            channels: ["doctrine"]
+
+        # To follow logs in real time, execute the following command:
+        # `bin/console server:log -vv`
+        server_log:
+            type: server_log
+            process_psr_3_messages: false
+            host: 127.0.0.1:9911
+
+        #log errors in error.log
+        error_log:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%_error.log'
+            level: error
+
+        #log warnings in warnings.log
+        warnings_log:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%_warnings.log'
+            level: warning
+
+        deprecation_log:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%_deprecations.log'
+            level: info
+            channels: ["php", "deprecation"]
+

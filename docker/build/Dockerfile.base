@@ -1,0 +1,18 @@
+# use the latest FPM image here, see https://confluence.iwf.io/x/Ao0-/
+FROM iwfwebsolutions/phpfpm:8.1-latest
+
+USER root
+
+# install additional project specific packages
+RUN DEBIAN_FRONTEND=noninteractive \
+    && apt-get update -y \
+    && apt-get install cron cups-bsd -y \
+    && apt-get install libc-client-dev -y \
+    && apt-get install libkrb5-dev -y \
+    && PHP_OPENSSL=true docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+    && docker-php-ext-install imap
+
+ENV APP_FRAMEWORK=symfony4
+
+# Copy project specific assets to /
+COPY ./assets-fpm /

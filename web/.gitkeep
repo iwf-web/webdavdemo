@@ -1,0 +1,2 @@
+# Required because the Jenkins build will create a versions.txt in this directory.
+# If the directory is deleted, Jenkins will fail to build the project.

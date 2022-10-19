@@ -1,0 +1,33 @@
+security:
+  enable_authenticator_manager: true
+
+  password_hashers:
+    App\Entity\User\User:
+      algorithm: plaintext
+
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER
+    ROLE_SUPER_ADMIN: [ ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
+
+  providers:
+    app_user_provider:
+      id: App\Service\Security\User\AppUserProvider
+
+  firewalls:
+    # disables authentication for assets and the profiler, adapt it according to your needs
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js|favicon.ico)/
+      security: false
+
+    main:
+      pattern: ^/
+      user_checker: App\Service\Security\User\UserChecker
+      json_login:
+        check_path: app_login
+      logout:
+        path: /api/logout
+        target: /
+
+  access_control:
+    - { path: ^/admin, roles: ROLE_USER }
+    - { path: ^/, roles: PUBLIC_ACCESS }

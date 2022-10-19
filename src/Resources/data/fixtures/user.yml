@@ -1,0 +1,6 @@
+-
+  username: user
+  email: user@iwf.io
+  password: user123
+  language: de
+  groups: [users]
