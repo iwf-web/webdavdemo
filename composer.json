@@ -1,0 +1,16 @@
+{
+  "name": "iwf-web/vagrant-scripts",
+  "description": "Base scripts for local vagrant/docker boxes",
+  "keywords": ["vagrant", "docker"],
+  "license": "MIT",
+  "homepage": "https://github.com/iwf-web/vagrant-scripts",
+  "authors": [
+    {
+      "name": "Jens Hassler",
+      "email": "j.hassler@iwf.ch"
+    }
+  ],
+  "require-dev": {
+    "liip/rmt": "^1.7"
+  }
+}
