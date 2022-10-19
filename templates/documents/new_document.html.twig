@@ -3,15 +3,22 @@
 {% block title %}New Document{% endblock %}
 
 {% block body %}
-    <h1>Create new Document</h1>
+    <div class="container">
+        <h1>Create new Document</h1>
 
-    {{ form_start(form, {attr: attr|default({})}) }}
-    {{ form_widget(form) }}
+        {{ form_start(form, {attr: attr|default({})}) }}
+        {{ form_widget(form) }}
 
-    <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
-        <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('create new document') }}
-    </button>
+        <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
+            <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('Create new document') }}
+        </button>
 
-    <a href="{{ path('app_documents_list_documents') }}" class="btn btn-link">back to document list</a>
-    {{ form_end(form) }}
+        <a class="btn btn-link"
+           href="{{ path('app_documents_list_documents') }}"
+           style="float: right"
+        >
+            Back to document list
+        </a>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
