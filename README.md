@@ -6,93 +6,107 @@ Webdav Demo Application for BaselHack 2022
 Setting up everything
 ---------------------
 
-### Prerequisites
+<img align="right" src="docs/assets/overview.png">
+
+A Symfony 5 application running inside Docker in an automatically provisioned Vagrant box.
+
+You can use this example for easy local development and to create Docker images ready to be run on a server with Docker enabled.
+
+It's very useful if you want all your developers to work with the exact some software versions and configurations. And to generate
+Docker images you can use to run the exact same software on a production server.
+
+Includes:
+
+- Symfony 5 demo app
+- Vagrant provisioning with [vagrant-scripts](https://github.com/iwf-web/vagrant-scripts)
+- This documentation
 
 
-a1) Make sure required Vagrant plugins are installed. You can install them with "vagrant plugin install"
+It's based on our Open source Docker images:
 
-    vagrant plugin install vagrant-hostsupdater vagrant-vbguest
-  
-a2) If you want to use RSync synchronization instead of NFS, install the following plugins, too:
-    
-    vagrant plugin install vagrant-rsync-back vagrant-gatling-rsync
+- PHP 8.1: [IWF PHP base image on Dockerhub](https://hub.docker.com/repository/docker/iwfwebsolutions/phpfpm)
+- Nginx 1.20: [IWF Nginx base image on Dockerhub](https://hub.docker.com/repository/docker/iwfwebsolutions/nginx)
+- MySQL 8.0: [IWF MySQL base image on Dockerhub](https://hub.docker.com/repository/docker/iwfwebsolutions/mysql)
 
-a3) It's generally good to have filesystem changes propagated to the container to support file watchers inside
-    the docker containers like "yarn watch":
-    
-    vagrant plugin install vagrant-notify-forwarder
+The virtual machine is based on Debian 9 (Stretch), using the [debian/contrib-stretch64](https://app.vagrantup.com/debian/boxes/contrib-stretch64) box image.
 
+The following components are used:
 
-
-### Project setup for developers
-
-a1) **Automatically**: run the script to copy the initial files. Adjust the copied files to your needs.
-
-    ./bin/init_project.sh
-       
-
-a2) **Manually**
-
-a2a) **Copy and customize the local vagrant_settings.yml.dist file**. For most cases, you won't need to change anything.
-   This is the place to change synchronization type to "rsync" or "nfs".
-
-    cd docker/vagrant
-    cp vagrant_settings.yml.dist vagrant_settings.yml
-    cd ../..
-
-a2b) **Copy and configure docker-compose.yml**
-
-    cd docker/run
-    cp docker-compose.yml.dist docker-compose.yml
-    
-a3c) **Copy docker/run/data/conf/symfony_configs/parameters_local.yml.dist to parameters_local.yml**
-
-    cd docker/run/data/conf/symfony_configs
-    cp parameters_local.yml.dist parameters_local.yml
-
-b) (Optional, if you have one) Grab an initial database dump from some system and put it into docker/run/data/dockerinit.d/mysql/.
-   _ATTENTION: don't do this with the init_db.sql dump - it's already loaded through the Migration files._
-
-c) Start the whole thing and take a coffee for 10 minutes. This builds the virtual machine,
-   sets up Docker for local deployment and installs vendors inside the vagrant box
-
-    cd docker/vagrant
-    vagrant up
-    
-   During the setup you need to enter your docker credentials. Please have
-   them at hand.
-   
-   This process takes some time to finish. Once it's finished, scripts are starting inside the docker
-   containers to install dependencies, assets, clearing cache, ...
-   
-   To watch the status you can use the `./docker-logs.sh` command.
-   
-d) Setup PhpStorm for testing: see https://confluence.iwf.io/x/38Ac
-   
-e) ONLY FOR RSYNC USERS: copy the updated stuff back to your machine (vendors ...) or use an ssh-client
-
-    vagrant rsync-back
-
-f) Test if you can access the application by opening [http://webdavdemo/](http://webdavdemo/) in 
-   your browser
-
-g) ONLY FOR RSYNC USERS: If all is well, you can start file synchronization or use phpStorm
-
-    vagrant gatling-rsync-auto
+- PHP 8.1
+- Nginx 1.20
+- MySQL 8.0
+- PhpMyAdmin
 
 
-A) Creating test data
-----------------------------------
+For local development the following tools are available:
 
-#### B1) Super Admin
-
-The super admin user "system" is automatically created in the init_db.sql.
-
-CHANGE the password of this user in your final apps!
+- XDebug
+- Composer
+- Yarn
 
 
-B) Next steps
-----------------------------------
+# Requirements
+
+To run this example project you need:
+
+- [Vagrant](https://www.vagrantup.com)
+- [VirtualBox](https://www.virtualbox.org)
+
+If you don't have an Account on [Dockerhub](https://hub.docker.com) you should create one.
+The setup process will ask you for the credentials.
+
+You should also install these vagrant plugins:
+
+- vagrant-notifyforwarder
+- vagrant-hostsupdater
+- vagrant-vbguest
+
+If you're running Windows you should also install:
+
+- vagrant-gatling-rsync
+- vagrant-rsync-back
+
+Install plugins like this:
+
+```
+vagrant plugin install vagrant-notifyforwarder
+vagrant plugin install vagrant-hostsupdater
+vagrant plugin install vagrant-vbguest
+```
+
+# Setup this project
+
+Just run:
+
+```
+./bin/init_project.sh
+cd docker/vagrant
+vagrant up
+```
+
+It takes about 10-15 minutes, depending on your Internet and machine speed.
+During the setup you need to enter your docker credentials. Please have
+them at hand.
+
+After everything is completed, a message is displayed saying:
+
+```
+Machine was booted, startup scripts are running inside the docker containers - please wait. 
+If you're curious, you can execute 'docker logs -t fpm' inside vagrant or use the docker-logs.sh script. 
+Once finished, the application will be available on http://webdavdemo
+``` 
+
+Now you can browse to http://webdavdemo and you see the demo application
+
+
+# Learn more & start working
+
+- [Understand the project structure](docs/structure.md)
+- [Customize & handle your Vagrant box](docs/vagrant.md)
+- [Understand the Docker](docs/docker.md)
+- [Setup PhpStorm for development](docs/phpstorm.md)
+- [Recipes, Tips & How To's](docs/tips.md)
+
 
 
 There is no "su"-user in fpm-container anymore. If you need root-privileges, login with root:
