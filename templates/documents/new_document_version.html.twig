@@ -3,14 +3,22 @@
 {% block title %}New Version{% endblock %}
 
 {% block body %}
-    <h1>Upload new version for Document ID:{{document.id}}</h1>
+    <div class="container">
+        <h1>Upload new version for Document ID:{{ document.id }}</h1>
 
-    {{ form_start(form, {attr: attr|default({})}) }}
-    {{ form_widget(form) }}
+        {{ form_start(form, {attr: attr|default({})}) }}
+        {{ form_widget(form) }}
 
-    <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
-        <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('create new version') }}
-    </button>
-    <a href="{{ path('app_documents_show_document', {id: document.id}) }}" class="btn btn-link">back to document</a>
-    {{ form_end(form) }}
+        <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
+            <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('Create new version') }}
+        </button>
+
+        <a class="btn btn-link""
+        href="{{ path('app_documents_show_document', {id: document.id}) }}"
+        style="float: right"
+        >
+        Back to document
+        </a>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

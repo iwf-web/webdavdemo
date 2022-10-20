@@ -79,7 +79,7 @@
     "sort-packages": true,
     "secure-http": false,
     "github-oauth": {
-      "github.com": "e1983a37e3541d1a34b23c2b77f5ddef45024786"
+      "github.com": "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"
     },
     "allow-plugins": {
       "symfony/flex": true,

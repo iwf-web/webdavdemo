@@ -3,29 +3,51 @@
 {% block title %}Document List{% endblock %}
 
 {% block body %}
-    <h1>Documentlist</h1>
-    <p><a href="{{ path('app_documents_new_document') }}">create new document</a></p>
+    <div class="container">
+        <h1>Documentlist</h1>
+        <a class="btn btn-primary" href="{{ path('app_documents_new_document') }}" role="button"
+           style="float: right; margin-bottom: 2rem"
+        >
+            Create new document
+        </a>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Filename</th>
-                <th>VersionNr</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        {% for document in documents %}
-            <tr>
-                <td><a href="{{ path('app_documents_show_document', {id:document.id }) }}">{{ document.id }}</a></td>
-                <td>{{ document.name }}.{{ document.fileExtension }}</td>
-                <td><a title="download"
-                       href="{{ path('app_documents_download_document_file', {id:document.id, versionNr:document.currentFile.versionNr }) }}"
-                       target="_blank">{{ document.currentFile.versionNr }}</a></td>
-                <td>
-                    <a onclick="alert('Here we need your implementation to edit this document({{ document.id }}) and create an new version on saving')"
-                       href="#">edit</a></td>
-            </tr>
-        {% endfor %}
-    </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Filename</th>
+                    <th scope="col">VersionNr</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for document in documents %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('app_documents_show_document', {id:document.id }) }}">
+                                {{ document.id }}
+                            </a>
+                        </td>
+                        <td>{{ document.name }}.{{ document.fileExtension }}</td>
+                        <td>
+                            <a title="download"
+                               href="{{ path('app_documents_download_document_file', {id:document.id, versionNr:document.currentFile.versionNr }) }}"
+                               target="_blank"
+                            >
+                                {{ document.currentFile.versionNr }}
+                            </a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary"
+                               onclick="alert('Here we need your implementation to edit this document({{ document.id }}) and create an new version on saving')"
+                               href="#"
+                            >
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
