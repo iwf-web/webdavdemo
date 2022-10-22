@@ -3,6 +3,9 @@ Webdav Demo Application
 
 Webdav Demo Application for BaselHack 2022
 
+[Click here for the challenge description](https://github.com/iwf-web/webdavdemo/wiki/Challenge-IWF)
+
+
 Setting up everything
 ---------------------
 
